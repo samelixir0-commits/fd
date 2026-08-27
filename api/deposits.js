@@ -1,10 +1,23 @@
-import { readFile, writeFile } from 'node:fs/promises'
+import { get, put } from '@vercel/blob'
+import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 
-const dataFile = fileURLToPath(new URL('../server/data/deposits.json', import.meta.url))
+const blobPath = 'fdvault/deposits.json'
+const seedFile = fileURLToPath(new URL('../server/data/deposits.json', import.meta.url))
 
-const readDeposits = async () => JSON.parse(await readFile(dataFile, 'utf8'))
-const saveDeposits = async (deposits) => writeFile(dataFile, `${JSON.stringify(deposits, null, 2)}\n`, 'utf8')
+const readSeed = async () => JSON.parse(await readFile(seedFile, 'utf8'))
+const readDeposits = async () => {
+  try {
+    const result = await get(blobPath, { access: 'private' })
+    if (!result) return readSeed()
+    const response = await fetch(result.downloadUrl)
+    if (!response.ok) throw new Error('Could not download deposit data')
+    return JSON.parse(await response.text())
+  } catch {
+    return readSeed()
+  }
+}
+const saveDeposits = async (deposits) => put(blobPath, JSON.stringify(deposits, null, 2), { access: 'private', addRandomSuffix: false, allowOverwrite: true, contentType: 'application/json' })
 const send = (response, status, body) => { response.status(status).setHeader('Access-Control-Allow-Origin', '*').setHeader('Access-Control-Allow-Headers', 'Content-Type').setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); return response.status(status).json(body) }
 
 export default async function handler(request, response) {
@@ -18,5 +31,5 @@ export default async function handler(request, response) {
     if (request.method === 'PUT') { const index = deposits.findIndex((deposit) => deposit.id === id); if (index < 0) return send(response, 404, { error: 'Deposit not found' }); deposits[index] = { ...request.body, id }; await saveDeposits(deposits); return send(response, 200, deposits[index]) }
     if (request.method === 'DELETE') { const remaining = deposits.filter((deposit) => deposit.id !== id); if (remaining.length === deposits.length) return send(response, 404, { error: 'Deposit not found' }); await saveDeposits(remaining); return response.status(204).end() }
     return send(response, 405, { error: 'Method not allowed' })
-  } catch (error) { console.error(error); const message = error.code === 'EROFS' ? 'Vercel filesystem is read-only. Use a persistent Node host for JSON writes.' : 'Could not access deposit data'; return send(response, 500, { error: message }) }
+  } catch (error) { console.error(error); return send(response, 500, { error: 'Could not access persistent deposit storage' }) }
 }

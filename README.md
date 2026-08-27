@@ -23,7 +23,7 @@ npm run dev
 
 This single command starts Vite on port `5173` and the Node data server on port `5174`.
 
-The app uses `/api/deposits` for loading, adding, editing, and deleting records. Vercel uses `api/deposits.js` for this route. Serverless hosts may reset JSON-file changes when instances restart, so use a persistent Node host for reliable production data. This file has no database backup or multi-user authorization.
+The app uses `/api/deposits` for loading, adding, editing, and deleting records. Vercel uses `api/deposits.js` for this route. For persistent Vercel writes without a database, create a Vercel Blob store and add its `BLOB_READ_WRITE_TOKEN` environment variable to the Vercel project. The bundled JSON file is used only as initial seed data when the Blob is empty. This file has no database backup or multi-user authorization.
 
 Build and lint checks:
 
