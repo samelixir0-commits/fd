@@ -1,0 +1,32 @@
+[
+  {
+    "fdNumber": "FD-482019",
+    "bank": "moni",
+    "ownerName": "FD Owner",
+    "principal": 250000,
+    "rate": 7.1,
+    "startDate": "2025-03-18",
+    "maturityDate": "2026-09-18",
+    "id": 1
+  },
+  {
+    "fdNumber": "FD-100",
+    "bank": "satyajit",
+    "ownerName": "Test",
+    "principal": 100000,
+    "rate": 7,
+    "startDate": "2026-08-27",
+    "maturityDate": "2027-08-27",
+    "id": 1787842568518
+  },
+  {
+    "fdNumber": "wewe",
+    "bank": "ewew",
+    "ownerName": "FD Owner",
+    "principal": 100000,
+    "rate": 7,
+    "startDate": "2026-08-27",
+    "maturityDate": "2026-08-27",
+    "id": 1787842600734
+  }
+]
