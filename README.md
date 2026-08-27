@@ -5,7 +5,7 @@ FDvault is a personal fixed-deposit tracker built with React, TypeScript, Vite, 
 ## Features
 
 - Add, edit, and delete fixed deposits.
-- Track FD number, bank, principal, interest rate, start date, maturity date, and reminder email.
+- Track FD number, bank, principal, interest rate, start date, maturity date, and FD owner name.
 - See total invested amount, expected maturity amount, earned interest, and next maturity.
 - Request browser notification permission for five-day maturity reminders. The default reminder address is kept internal and is not shown in the app.
 - Persist deposits in `server/data/deposits.json` through the Node API.
@@ -23,7 +23,7 @@ npm run dev
 
 This single command starts Vite on port `5173` and the Node data server on port `5174`.
 
-The app uses `/api/deposits` for loading, adding, editing, and deleting records. Deploy the Node server on a host with persistent disk storage; serverless hosts may reset JSON-file changes when instances restart. This file is simple and has no database backup or multi-user authorization.
+The app uses `/api/deposits` for loading, adding, editing, and deleting records. Vercel uses `api/deposits.js` for this route. Serverless hosts may reset JSON-file changes when instances restart, so use a persistent Node host for reliable production data. This file has no database backup or multi-user authorization.
 
 Build and lint checks:
 
@@ -31,4 +31,3 @@ Build and lint checks:
 npm run build
 npm run lint
 ```
-# fd
