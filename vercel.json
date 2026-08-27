@@ -2,5 +2,5 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "functions": { "api/deposits.js": { "includeFiles": ["server/data/deposits.json"] } }
+  "functions": { "api/deposits.js": { "includeFiles": "server/data/deposits.json" } }
 }
